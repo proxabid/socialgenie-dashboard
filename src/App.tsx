@@ -25,6 +25,9 @@ const SessionSync = ({ children }: { children: React.ReactNode }) => {
         if (userId) {
           console.log("Starting session sync for user:", userId);
           
+          // Clear any existing session first
+          await supabase.auth.signOut();
+          
           // Get JWT token from Clerk with the 'supabase' template
           const token = await getToken({
             template: "supabase"
@@ -37,11 +40,6 @@ const SessionSync = ({ children }: { children: React.ReactNode }) => {
 
           console.log("Received token from Clerk:", token.substring(0, 20) + "...");
           
-          // First sign out to clear any existing session
-          await supabase.auth.signOut();
-          
-          console.log("Setting Supabase session with token");
-          
           // Set the new session with the token
           const { data, error } = await supabase.auth.setSession({
             access_token: token,
@@ -50,14 +48,15 @@ const SessionSync = ({ children }: { children: React.ReactNode }) => {
           
           if (error) {
             console.error("Failed to set Supabase session:", error);
+            console.error("Error details:", error.message);
             return;
           }
           
           console.log("Successfully set Supabase session:", !!data.session);
           
           // Verify the session
-          const { data: { session } } = await supabase.auth.getSession();
-          console.log("Verified Supabase session status:", !!session);
+          const { data: { user } } = await supabase.auth.getUser();
+          console.log("Verified Supabase user:", !!user);
           
         } else {
           console.log("No Clerk user ID, signing out from Supabase");
@@ -65,6 +64,9 @@ const SessionSync = ({ children }: { children: React.ReactNode }) => {
         }
       } catch (error) {
         console.error("Session sync error:", error);
+        if (error instanceof Error) {
+          console.error("Error details:", error.message);
+        }
       }
     };
 
