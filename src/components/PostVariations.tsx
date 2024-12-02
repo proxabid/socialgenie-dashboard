@@ -31,14 +31,14 @@ export function PostVariations({ variations, isLoading }: PostVariationsProps) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {Array.from({ length: 3 }).map((_, i) => (
-          <Card key={i} className="relative overflow-hidden p-6 space-y-4 animate-pulse bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
-            <div className="h-4 bg-muted rounded w-1/3" />
-            <div className="space-y-3">
-              <div className="h-3 bg-muted rounded w-3/4" />
-              <div className="h-3 bg-muted rounded w-full" />
-              <div className="h-3 bg-muted rounded w-2/3" />
+          <Card key={i} className="relative overflow-hidden p-6 animate-pulse bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800">
+            <div className="h-4 bg-gray-100 dark:bg-gray-800 rounded-md w-1/3" />
+            <div className="space-y-3 mt-4">
+              <div className="h-3 bg-gray-100 dark:bg-gray-800 rounded-md w-3/4" />
+              <div className="h-3 bg-gray-100 dark:bg-gray-800 rounded-md w-full" />
+              <div className="h-3 bg-gray-100 dark:bg-gray-800 rounded-md w-2/3" />
             </div>
-            <div className="h-8 bg-muted rounded w-full" />
+            <div className="h-10 bg-gray-100 dark:bg-gray-800 rounded-md w-full mt-6" />
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent skeleton-shine" />
           </Card>
         ))}
@@ -53,37 +53,39 @@ export function PostVariations({ variations, isLoading }: PostVariationsProps) {
       {variations.map((post, index) => (
         <Card 
           key={index} 
-          className="group relative p-8 space-y-6 overflow-hidden bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 hover:shadow-xl transition-all duration-300 animate-fade-in border border-gray-200 dark:border-gray-700"
+          className="group relative p-8 space-y-6 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 hover:shadow-lg transition-all duration-300 animate-fade-in rounded-xl"
           style={{
             animationDelay: `${index * 150}ms`
           }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-indigo-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl" />
           
-          <p className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400">
-            Variation {index + 1}
-          </p>
-          
-          <div className="space-y-4 relative z-10">
-            {cleanText(post).split('\n').map((line, i) => (
-              line.trim() && (
-                <p 
-                  key={i} 
-                  className="text-base leading-relaxed text-gray-700 dark:text-gray-300"
-                  style={{
-                    animationDelay: `${i * 50}ms`
-                  }}
-                >
-                  {line.trim()}
-                </p>
-              )
-            ))}
+          <div className="relative z-10">
+            <p className="text-lg font-semibold mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              Variation {index + 1}
+            </p>
+            
+            <div className="space-y-4">
+              {cleanText(post).split('\n').map((line, i) => (
+                line.trim() && (
+                  <p 
+                    key={i} 
+                    className="text-sm leading-relaxed text-gray-600 dark:text-gray-300"
+                    style={{
+                      animationDelay: `${i * 50}ms`
+                    }}
+                  >
+                    {line.trim()}
+                  </p>
+                )
+              ))}
+            </div>
           </div>
           
           <Button
             variant="outline"
             size="sm"
-            className="w-full group-hover:scale-105 transition-all duration-300 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-gray-200 dark:border-gray-700 hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-500 hover:text-white"
+            className="w-full group-hover:scale-105 transition-all duration-300 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-gray-200 dark:border-gray-700 hover:bg-gradient-to-r hover:from-blue-600 hover:to-indigo-600 hover:text-white"
             onClick={() => copyToClipboard(cleanText(post))}
           >
             <Copy className="w-4 h-4 mr-2" />
