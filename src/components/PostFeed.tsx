@@ -51,23 +51,23 @@ export function PostFeed() {
 
   return (
     <Card className="bg-white shadow-sm border border-gray-100 rounded-xl overflow-hidden">
-      <div className="p-6 border-b border-gray-100">
+      <div className="p-8 border-b border-gray-100">
         <h2 className="text-xl font-semibold text-gray-900">Generated Posts</h2>
       </div>
       <ScrollArea className="h-[600px]">
-        <div className="p-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className="p-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {posts.map((post, index) => (
               <Card 
                 key={index} 
                 className="relative group overflow-hidden hover:shadow-lg transition-all duration-300"
               >
-                <div className="p-4 space-y-3">
-                  <div className="flex justify-between items-start">
+                <div className="p-6 space-y-4">
+                  <div className="flex justify-between items-start gap-4">
                     <p className="text-sm text-gray-500 line-clamp-1">
                       Prompt: {post.prompt}
                     </p>
-                    <span className="text-xs text-gray-400">
+                    <span className="text-xs text-gray-400 whitespace-nowrap">
                       {formatDistanceToNow(new Date(post.timestamp), { addSuffix: true })}
                     </span>
                   </div>
@@ -75,32 +75,32 @@ export function PostFeed() {
                     <p className="text-gray-600 leading-relaxed line-clamp-3">
                       {post.content}
                     </p>
-                    <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-white to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent" />
                   </div>
                   {post.tags && post.tags.length > 0 && (
-                    <div className="flex gap-1 flex-wrap">
+                    <div className="flex gap-2 flex-wrap">
                       {post.tags.slice(0, 2).map((tagId) => {
                         const tag = tags.find(t => t.id === tagId);
                         return tag ? (
                           <Badge 
                             key={tag.id} 
                             variant="secondary"
-                            className="bg-gray-50 text-gray-600 px-2 py-0.5 text-xs"
+                            className="bg-gray-50 text-gray-600 px-3 py-1 text-xs"
                           >
                             {getTagIcon(tag.name)}
-                            <span className="ml-1">{tag.name}</span>
+                            <span className="ml-1.5">{tag.name}</span>
                           </Badge>
                         ) : null;
                       })}
                       {post.tags.length > 2 && (
-                        <Badge variant="secondary" className="bg-gray-50 text-gray-600 px-2 py-0.5 text-xs">
+                        <Badge variant="secondary" className="bg-gray-50 text-gray-600 px-3 py-1 text-xs">
                           +{post.tags.length - 2}
                         </Badge>
                       )}
                     </div>
                   )}
                 </div>
-                <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-gray-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-gray-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -118,7 +118,7 @@ export function PostFeed() {
             ))}
           </div>
           {posts.length === 0 && (
-            <div className="text-center py-12 text-gray-500">
+            <div className="text-center py-16 text-gray-500">
               No posts generated yet. Start by generating your first post!
             </div>
           )}
@@ -130,7 +130,7 @@ export function PostFeed() {
           <DialogHeader>
             <DialogTitle>Post Preview</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div className="space-y-2">
               <p className="text-sm font-medium text-gray-500">Prompt</p>
               <p className="text-gray-900">{selectedPost?.prompt}</p>
@@ -152,14 +152,14 @@ export function PostFeed() {
                         className="bg-gray-50 text-gray-600"
                       >
                         {getTagIcon(tag.name)}
-                        <span className="ml-1">{tag.name}</span>
+                        <span className="ml-1.5">{tag.name}</span>
                       </Badge>
                     ) : null;
                   })}
                 </div>
               </div>
             )}
-            <div className="flex justify-end gap-2 mt-4">
+            <div className="flex justify-end gap-2 mt-6">
               <Button
                 variant="outline"
                 onClick={() => copyToClipboard(selectedPost?.content || "")}
