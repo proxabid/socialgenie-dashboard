@@ -9,45 +9,45 @@ interface DashboardLayoutProps {
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-background">
-        <Sidebar className="border-r">
+      <div className="min-h-screen flex w-full bg-[#F8F8F9]">
+        <Sidebar className="border-r bg-white">
           <SidebarContent>
             <SidebarGroup>
-              <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
+              <SidebarGroupLabel className="text-[#6B7280]">Dashboard</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
                   <SidebarMenuItem>
-                    <SidebarMenuButton className="w-full">
+                    <SidebarMenuButton className="w-full text-[#374151] hover:bg-[#F3F4F6]">
                       <MessageSquare className="w-4 h-4 mr-2" />
                       <span>Generate Post</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
-                    <SidebarMenuButton className="w-full">
+                    <SidebarMenuButton className="w-full text-[#374151] hover:bg-[#F3F4F6]">
                       <Calendar className="w-4 h-4 mr-2" />
                       <span>View Calendar</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
-                    <SidebarMenuButton className="w-full">
+                    <SidebarMenuButton className="w-full text-[#374151] hover:bg-[#F3F4F6]">
                       <History className="w-4 h-4 mr-2" />
                       <span>Analyze History</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
-                    <SidebarMenuButton className="w-full">
+                    <SidebarMenuButton className="w-full text-[#374151] hover:bg-[#F3F4F6]">
                       <Lightbulb className="w-4 h-4 mr-2" />
                       <span>Explore Ideas</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
-                    <SidebarMenuButton className="w-full">
+                    <SidebarMenuButton className="w-full text-[#374151] hover:bg-[#F3F4F6]">
                       <BarChart2 className="w-4 h-4 mr-2" />
                       <span>Analytics</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
-                    <SidebarMenuButton className="w-full">
+                    <SidebarMenuButton className="w-full text-[#374151] hover:bg-[#F3F4F6]">
                       <Settings className="w-4 h-4 mr-2" />
                       <span>Settings</span>
                     </SidebarMenuButton>
@@ -56,16 +56,16 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               </SidebarGroupContent>
             </SidebarGroup>
             <SidebarGroup>
-              <SidebarGroupLabel>Statistics</SidebarGroupLabel>
+              <SidebarGroupLabel className="text-[#6B7280]">Statistics</SidebarGroupLabel>
               <SidebarGroupContent>
                 <div className="p-4 space-y-4">
-                  <div className="bg-accent/50 rounded-lg p-3">
-                    <p className="text-sm font-medium">Posts Generated</p>
-                    <p className="text-2xl font-bold">128</p>
+                  <div className="bg-[#F3F4F6] rounded-lg p-3">
+                    <p className="text-sm font-medium text-[#374151]">Posts Generated</p>
+                    <p className="text-2xl font-bold text-[#111827]">128</p>
                   </div>
-                  <div className="bg-accent/50 rounded-lg p-3">
-                    <p className="text-sm font-medium">Success Rate</p>
-                    <p className="text-2xl font-bold">98%</p>
+                  <div className="bg-[#F3F4F6] rounded-lg p-3">
+                    <p className="text-sm font-medium text-[#374151]">Success Rate</p>
+                    <p className="text-2xl font-bold text-[#111827]">98%</p>
                   </div>
                 </div>
               </SidebarGroupContent>
