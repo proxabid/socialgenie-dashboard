@@ -21,6 +21,11 @@ export function PostGenerator() {
   const [showPreview, setShowPreview] = useState(false);
 
   const handleGenerate = async () => {
+    if (!prompt.trim()) {
+      toast.error("Please enter a prompt first");
+      return;
+    }
+
     if (!userId) {
       toast.error("Please sign in to generate posts");
       return;
@@ -28,15 +33,20 @@ export function PostGenerator() {
 
     setLoading(true);
     try {
+      console.log("Starting post generation process");
       console.log("Generating post with prompt:", prompt);
+      
       const posts = await generatePosts(prompt);
+      console.log("Generated posts response:", posts);
+      
+      if (!posts || posts.length === 0) {
+        throw new Error("No content was generated");
+      }
+
       const response = posts[0];
       setGeneratedContent(response);
       
-      const wordCount = response.split(' ').length;
-      updateStats(wordCount);
-      
-      console.log("Saving generated post");
+      console.log("Saving post to Supabase");
       await savePost({ 
         content: response, 
         prompt, 
@@ -44,13 +54,18 @@ export function PostGenerator() {
         tags: selectedTags
       });
       
-      console.log("Invalidating posts query");
+      console.log("Post saved successfully");
+      
+      const wordCount = response.split(' ').length;
+      updateStats(wordCount);
+      
       await queryClient.invalidateQueries({ queryKey: ['posts'] });
       
       toast.success("Post generated and saved successfully!");
+      setPrompt(""); // Clear the prompt after successful generation
     } catch (error) {
-      console.error("Error generating post:", error);
-      toast.error("Failed to generate post. Please try again.");
+      console.error("Error in post generation process:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to generate post. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -85,7 +100,7 @@ export function PostGenerator() {
         <div className="flex gap-3">
           <Button 
             onClick={handleGenerate} 
-            disabled={loading}
+            disabled={loading || !prompt.trim()}
             className="flex-1 bg-blue-500 hover:bg-blue-600 text-white"
           >
             {loading ? "Generating..." : "Generate Post"}

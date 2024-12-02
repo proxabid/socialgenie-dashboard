@@ -11,12 +11,13 @@ export async function savePost(post: Post) {
   const { data: sessionData } = await supabase.auth.getSession();
   if (!sessionData.session) {
     console.error("No authenticated session found");
-    throw new Error("No authenticated session found");
+    throw new Error("You must be logged in to save posts");
   }
 
-  console.log("Saving post with user ID:", sessionData.session.user.id);
+  console.log("Attempting to save post with user ID:", sessionData.session.user.id);
+  console.log("Post data:", post);
 
-  const { error } = await supabase.from('posts').insert({
+  const { data, error } = await supabase.from('posts').insert({
     content: post.content,
     prompt: post.prompt,
     tags: post.tags,
@@ -25,9 +26,12 @@ export async function savePost(post: Post) {
   });
 
   if (error) {
-    console.error("Error saving post:", error);
-    throw error;
+    console.error("Error saving post to Supabase:", error);
+    throw new Error("Failed to save post: " + error.message);
   }
+
+  console.log("Post saved successfully:", data);
+  return data;
 }
 
 export async function getPosts(): Promise<Post[]> {
@@ -47,17 +51,12 @@ export async function getPosts(): Promise<Post[]> {
 
   if (error) {
     console.error("Error fetching posts:", error);
-    throw error;
+    throw new Error("Failed to fetch posts: " + error.message);
   }
 
   console.log("Retrieved posts:", data);
 
-  if (!data) {
-    console.log("No posts found");
-    return [];
-  }
-
-  return data.map(post => ({
+  return (data || []).map(post => ({
     content: post.content,
     prompt: post.prompt,
     timestamp: post.created_at,
