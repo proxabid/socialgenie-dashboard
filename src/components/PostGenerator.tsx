@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { updateStats } from "@/services/stats";
+import { generatePosts } from "@/services/openai";
 
 export function PostGenerator() {
   const [prompt, setPrompt] = useState("");
@@ -12,8 +13,9 @@ export function PostGenerator() {
   const handleGenerate = async () => {
     setLoading(true);
     try {
-      // Assume there's a function to generate the content
-      const response = await generatePost(prompt);
+      // Generate posts using the imported function
+      const posts = await generatePosts(prompt);
+      const response = posts[0]; // Use the first generated post
       setGeneratedContent(response);
       
       // After successful generation, update stats
@@ -22,6 +24,7 @@ export function PostGenerator() {
       
       toast.success("Post generated successfully!");
     } catch (error) {
+      console.error("Error generating post:", error);
       toast.error("Failed to generate post.");
     } finally {
       setLoading(false);
