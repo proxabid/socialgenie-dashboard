@@ -25,10 +25,9 @@ const SessionSync = ({ children }: { children: React.ReactNode }) => {
         if (userId) {
           console.log("Starting session sync for user:", userId);
           
-          // Get JWT token from Clerk with specific template
+          // Get JWT token from Clerk without template - it will use the default template
           const token = await getToken({
             skipCache: true,
-            template: "supabase",
           });
           
           if (!token) {
