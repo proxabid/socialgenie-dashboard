@@ -4,13 +4,14 @@ import { PostFeed } from "@/components/PostFeed";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Settings, LogOut, TrendingUp, Flame, PenTool } from "lucide-react";
+import { Settings, LogOut, TrendingUp, Flame, PenTool, Calendar, Target } from "lucide-react";
 import { useState } from "react";
 import { getApiKey, setApiKey } from "@/services/openai";
 import { toast } from "sonner";
 import { SignedIn, SignedOut, RedirectToSignIn, useUser, useClerk } from "@clerk/clerk-react";
 import { LineChart, Line, ResponsiveContainer } from "recharts";
 import { useStats } from "@/services/stats";
+import { cn } from "@/lib/utils";
 
 const Index = () => {
   const [showSettings, setShowSettings] = useState(false);
@@ -19,34 +20,58 @@ const Index = () => {
   const { signOut } = useClerk();
   const { data: stats, isLoading } = useStats();
 
-  const StatCard = ({ title, value, trend, data, icon: Icon, gradient }) => (
-    <Card className={`p-6 ${gradient} text-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300`}>
-      <div className="flex justify-between items-start mb-4">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <Icon className="w-5 h-5 opacity-80" />
-            <p className="text-sm font-medium opacity-80">{title}</p>
+  const StatCard = ({ title, value, subtitle, icon: Icon, gradient, trend, data }) => (
+    <Card className="p-6 bg-white shadow-sm border border-gray-100 rounded-2xl hover:shadow-md transition-all duration-300">
+      <div className="flex items-start justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <div className={cn(
+            "p-2 rounded-xl",
+            gradient === "green" && "bg-emerald-50",
+            gradient === "purple" && "bg-violet-50",
+            gradient === "blue" && "bg-blue-50"
+          )}>
+            <Icon className={cn(
+              "w-5 h-5",
+              gradient === "green" && "text-emerald-500",
+              gradient === "purple" && "text-violet-500",
+              gradient === "blue" && "text-blue-500"
+            )} />
           </div>
-          <p className="text-3xl font-bold">{value.toLocaleString()}</p>
+          <div>
+            <h3 className="text-sm font-medium text-gray-500">{title}</h3>
+            <div className="flex items-baseline gap-2">
+              <span className="text-2xl font-bold text-gray-900">{value.toLocaleString()}</span>
+              <span className="text-sm text-gray-500">{subtitle}</span>
+            </div>
+          </div>
         </div>
-        <span className={`flex items-center text-sm ${trend >= 0 ? 'text-emerald-100' : 'text-red-100'}`}>
-          <TrendingUp className="w-4 h-4 mr-1" />
-          {Math.abs(trend)}%
-        </span>
+        {trend && (
+          <span className={cn(
+            "flex items-center text-sm px-2 py-1 rounded-full",
+            trend >= 0 ? 'text-emerald-700 bg-emerald-50' : 'text-red-700 bg-red-50'
+          )}>
+            <TrendingUp className="w-3 h-3 mr-1" />
+            {Math.abs(trend)}%
+          </span>
+        )}
       </div>
-      <div className="h-16">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data}>
-            <Line 
-              type="monotone" 
-              dataKey="count" 
-              stroke="rgba(255,255,255,0.8)" 
-              strokeWidth={2} 
-              dot={false}
-              isAnimationActive={true}
+      <div className="grid grid-cols-7 gap-1">
+        {[...Array(7)].map((_, i) => {
+          const isActive = i < (value % 7);
+          return (
+            <div
+              key={i}
+              className={cn(
+                "h-2 rounded-full",
+                isActive ? (
+                  gradient === "green" ? "bg-emerald-500" :
+                  gradient === "purple" ? "bg-violet-500" :
+                  "bg-blue-500"
+                ) : "bg-gray-100"
+              )}
             />
-          </LineChart>
-        </ResponsiveContainer>
+          );
+        })}
       </div>
     </Card>
   );
@@ -111,28 +136,29 @@ const Index = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <StatCard 
-                title="Total Posts Generated" 
+                title="Posts Generated" 
                 value={stats.totalPosts}
+                subtitle="total posts"
                 trend={10}
                 data={stats.history.posts.slice(-10)}
                 icon={PenTool}
-                gradient="bg-gradient-to-r from-violet-500 to-purple-500"
+                gradient="purple"
               />
               <StatCard 
-                title="Words Written" 
+                title="Weekly Goal" 
                 value={stats.totalWords}
-                trend={8}
+                subtitle="/ 5,000 words"
                 data={stats.history.words.slice(-10)}
-                icon={TrendingUp}
-                gradient="bg-gradient-to-r from-blue-500 to-cyan-500"
+                icon={Target}
+                gradient="blue"
               />
               <StatCard 
                 title="Current Streak" 
                 value={stats.currentStreak}
-                trend={stats.currentStreak > 0 ? 100 : 0}
-                data={stats.history.posts.slice(-10).map(post => ({ count: stats.currentStreak }))}
+                subtitle="days"
+                data={stats.history.posts.slice(-10)}
                 icon={Flame}
-                gradient="bg-gradient-to-r from-orange-500 to-red-500"
+                gradient="green"
               />
             </div>
 
