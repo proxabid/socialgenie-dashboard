@@ -31,18 +31,18 @@ export function PostFeed() {
   };
 
   return (
-    <Card className="bg-white shadow-sm border border-gray-100">
-      <div className="p-4 border-b border-gray-100">
-        <h2 className="text-xl font-semibold">Generated Posts</h2>
+    <Card className="bg-white shadow-sm border border-gray-100 rounded-xl overflow-hidden">
+      <div className="p-6 border-b border-gray-100">
+        <h2 className="text-xl font-semibold text-gray-900">Generated Posts</h2>
       </div>
       <ScrollArea className="h-[600px]">
-        <div className="p-4 space-y-4">
+        <div className="p-6 space-y-6">
           {posts.map((post, index) => (
             <Card 
               key={index} 
-              className="p-4 hover:bg-gray-50 transition-all duration-200 border border-gray-100"
+              className="p-6 hover:bg-gray-50 transition-all duration-200 border border-gray-100 rounded-xl"
             >
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <div className="flex justify-between items-start">
                   <p className="text-sm text-gray-500">
                     Prompt: {post.prompt}
@@ -51,7 +51,7 @@ export function PostFeed() {
                     {formatDistanceToNow(new Date(post.timestamp), { addSuffix: true })}
                   </span>
                 </div>
-                <p className="text-gray-600">{post.content}</p>
+                <p className="text-gray-600 leading-relaxed">{post.content}</p>
                 {post.tags && post.tags.length > 0 && (
                   <div className="flex gap-2 flex-wrap">
                     {post.tags.map((tagId) => {
@@ -77,7 +77,7 @@ export function PostFeed() {
             </Card>
           ))}
           {posts.length === 0 && (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-12 text-gray-500">
               No posts generated yet. Start by generating your first post!
             </div>
           )}
