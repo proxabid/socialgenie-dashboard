@@ -16,22 +16,25 @@ if (!import.meta.env.VITE_CLERK_PUBLISHABLE_KEY) {
 
 const queryClient = new QueryClient();
 
-// Create a wrapper component to handle session syncing
 const SessionSync = ({ children }: { children: React.ReactNode }) => {
   const { getToken, userId } = useAuth();
   
   useEffect(() => {
     const syncSession = async () => {
-      if (userId) {
-        const token = await getToken();
-        console.log("Setting Supabase session with Clerk token");
-        await supabase.auth.setSession({
-          access_token: token || "",
-          refresh_token: "",
-        });
-      } else {
-        console.log("No Clerk session, signing out from Supabase");
-        await supabase.auth.signOut();
+      try {
+        if (userId) {
+          const token = await getToken();
+          console.log("Setting Supabase session with Clerk token");
+          await supabase.auth.setSession({
+            access_token: token || "",
+            refresh_token: "",
+          });
+        } else {
+          console.log("No Clerk session, signing out from Supabase");
+          await supabase.auth.signOut();
+        }
+      } catch (error) {
+        console.error("Error syncing session:", error);
       }
     };
 
