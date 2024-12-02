@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Tag as TagIcon, Plus, X } from "lucide-react";
+import { Tag as TagIcon, Plus, X, Monitor, Smartphone, Type } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -35,6 +35,14 @@ export function TagSelector({ selectedTags, onTagsChange }: TagSelectorProps) {
     }
   };
 
+  const getTagIcon = (tagName: string) => {
+    const lowerName = tagName.toLowerCase();
+    if (lowerName.includes('web')) return <Monitor className="w-3 h-3" />;
+    if (lowerName.includes('mobile')) return <Smartphone className="w-3 h-3" />;
+    if (lowerName.includes('typography')) return <Type className="w-3 h-3" />;
+    return <TagIcon className="w-3 h-3" />;
+  };
+
   return (
     <div className="space-y-2">
       <div className="flex flex-wrap gap-2">
@@ -43,16 +51,16 @@ export function TagSelector({ selectedTags, onTagsChange }: TagSelectorProps) {
             key={tag.id}
             variant={selectedTags.includes(tag.id) ? "default" : "outline"}
             className={`
-              cursor-pointer px-3 py-1 rounded-full transition-all duration-200
+              cursor-pointer px-3 py-1.5 rounded-full transition-all duration-200
               ${selectedTags.includes(tag.id) 
-                ? 'bg-gray-900 text-white hover:bg-gray-800' 
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300'
+                ? 'bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200' 
+                : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200'
               }
-              flex items-center gap-1 group
+              flex items-center gap-2 group text-xs font-medium
             `}
             onClick={() => toggleTag(tag.id)}
           >
-            <TagIcon className="w-3 h-3" />
+            {getTagIcon(tag.name)}
             {tag.name}
             <X className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
           </Badge>
@@ -62,7 +70,7 @@ export function TagSelector({ selectedTags, onTagsChange }: TagSelectorProps) {
             <Button 
               variant="outline" 
               size="sm"
-              className="rounded-full px-3 py-1 h-auto text-xs font-normal hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="rounded-full px-3 py-1.5 h-auto text-xs font-medium hover:bg-gray-50 border-dashed"
             >
               <Plus className="w-3 h-3 mr-1" />
               New Tag

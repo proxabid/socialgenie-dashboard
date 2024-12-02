@@ -5,7 +5,7 @@ import { getPosts, type Post } from "@/services/posts";
 import { getTags } from "@/services/tags";
 import { formatDistanceToNow } from "date-fns";
 import { Badge } from "@/components/ui/badge";
-import { Tag as TagIcon } from "lucide-react";
+import { Tag as TagIcon, Monitor, Smartphone, Type } from "lucide-react";
 
 export function PostFeed() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -21,6 +21,14 @@ export function PostFeed() {
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
+
+  const getTagIcon = (tagName: string) => {
+    const lowerName = tagName.toLowerCase();
+    if (lowerName.includes('web')) return <Monitor className="w-3 h-3" />;
+    if (lowerName.includes('mobile')) return <Smartphone className="w-3 h-3" />;
+    if (lowerName.includes('typography')) return <Type className="w-3 h-3" />;
+    return <TagIcon className="w-3 h-3" />;
+  };
 
   return (
     <Card className="bg-white shadow-sm border border-gray-100">
@@ -53,11 +61,12 @@ export function PostFeed() {
                           key={tag.id} 
                           variant="secondary"
                           className="
-                            bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300
-                            px-3 py-1 rounded-full flex items-center gap-1
+                            bg-gray-50 text-gray-600 hover:bg-gray-100
+                            px-3 py-1.5 rounded-full flex items-center gap-2 text-xs font-medium
+                            border border-gray-200
                           "
                         >
-                          <TagIcon className="w-3 h-3" />
+                          {getTagIcon(tag.name)}
                           {tag.name}
                         </Badge>
                       ) : null;
