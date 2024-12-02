@@ -25,9 +25,17 @@ export function PostVariations({ variations, isLoading }: PostVariationsProps) {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 animate-pulse">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <Card key={i} className="p-4 h-48" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <Card key={i} className="p-6 space-y-4 animate-pulse">
+            <div className="h-4 bg-muted rounded w-1/3" />
+            <div className="space-y-3">
+              <div className="h-3 bg-muted rounded w-3/4" />
+              <div className="h-3 bg-muted rounded w-full" />
+              <div className="h-3 bg-muted rounded w-2/3" />
+            </div>
+            <div className="h-8 bg-muted rounded w-full" />
+          </Card>
         ))}
       </div>
     );
@@ -36,15 +44,24 @@ export function PostVariations({ variations, isLoading }: PostVariationsProps) {
   if (!variations.length) return null;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {variations.map((post, index) => (
-        <Card key={index} className="p-4 space-y-4">
-          <p className="text-sm text-muted-foreground">Variation {index + 1}</p>
-          <p className="text-sm">{post}</p>
+        <Card 
+          key={index} 
+          className="p-6 space-y-4 animate-fade-in hover:shadow-lg transition-shadow duration-200"
+        >
+          <p className="text-lg font-semibold text-primary">Variation {index + 1}</p>
+          <div className="prose prose-sm max-w-none">
+            {post.split('\n').map((line, i) => (
+              line.trim() ? (
+                <p key={i} className="mb-4 text-sm leading-relaxed">{line.trim()}</p>
+              ) : null
+            ))}
+          </div>
           <Button
             variant="outline"
             size="sm"
-            className="w-full"
+            className="w-full hover:scale-105 transition-transform duration-200"
             onClick={() => copyToClipboard(post)}
           >
             <Copy className="w-4 h-4 mr-2" />

@@ -25,11 +25,11 @@ export async function generatePosts(prompt: string): Promise<string[]> {
         messages: [
           {
             role: "system",
-            content: `Craft LinkedIn posts in a voice that mixes Justin Welsh and Matt Gray. Create a unique voice that combines both styles perfectly. Write LinkedIn posts between 30-40 lines, using 8th-grade English. Create a two-line hook for each post that's engaging, short, and meaningful. Write the whole content using whitespace frequently for better readability. No emojis or hashtags. Write in markdown format with proper spacing. Don't exaggerate the numbers in the post keep it real numbers. Avoid using words like "Here is the truth" or similar cliché phrases that sound exactly like Justin Welsh. Your job is to make it unique from your side.`,
+            content: `Craft LinkedIn posts in a voice that mixes Justin Welsh and Matt Gray. Create a unique voice that combines both styles perfectly. Write LinkedIn posts between 30-40 lines, using 8th-grade English. Create a two-line hook for each post that's engaging, short, and meaningful. Write the whole content using whitespace frequently for better readability. No emojis or hashtags. Write in markdown format with proper spacing. Don't exaggerate the numbers in the post keep it real numbers. Avoid using words like "Here is the truth" or similar cliché phrases that sound exactly like Justin Welsh. Your job is to make it unique from your side. Add a blank line after each sentence for better readability.`,
           },
           {
             role: "user",
-            content: `Generate 6 unique variations of a LinkedIn post about: ${prompt}. Number each variation from 1 to 6.`,
+            content: `Generate 3 unique variations of a LinkedIn post about: ${prompt}. Number each variation from 1 to 3.`,
           },
         ],
         temperature: 0.9,
@@ -46,7 +46,6 @@ export async function generatePosts(prompt: string): Promise<string[]> {
     const data = await response.json();
     console.log("OpenAI API response:", data);
 
-    // Split the response into 6 variations
     const content = data.choices[0].message.content;
     const variations = content
       .split(/\d+\.\s+/)
