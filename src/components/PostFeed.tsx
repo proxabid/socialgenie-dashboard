@@ -86,10 +86,11 @@ export function PostFeed() {
                       {formatDistanceToNow(new Date(post.timestamp), { addSuffix: true })}
                     </span>
                   </div>
-                  <div className="relative">
-                    <p className="text-gray-700 leading-relaxed">
+                  <div className="relative min-h-[120px]">
+                    <p className="text-gray-700 leading-relaxed line-clamp-3">
                       {post.content}
                     </p>
+                    <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white/80 to-transparent" />
                   </div>
                   {post.tags && post.tags.length > 0 && (
                     <div className="flex gap-2 flex-wrap">
@@ -117,7 +118,7 @@ export function PostFeed() {
                     </div>
                   )}
                 </div>
-                <div className="p-4 bg-white/60 backdrop-blur-md border-t border-gray-200/30">
+                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-white/90 via-white/50 to-transparent">
                   <Button
                     variant="ghost"
                     size="sm"
