@@ -18,11 +18,11 @@ const queryClient = new QueryClient();
 
 // Create a wrapper component to handle session syncing
 const SessionSync = ({ children }: { children: React.ReactNode }) => {
-  const { getToken, session } = useAuth();
+  const { getToken, userId } = useAuth();
   
   useEffect(() => {
     const syncSession = async () => {
-      if (session) {
+      if (userId) {
         const token = await getToken();
         console.log("Setting Supabase session with Clerk token");
         await supabase.auth.setSession({
@@ -36,7 +36,7 @@ const SessionSync = ({ children }: { children: React.ReactNode }) => {
     };
 
     syncSession();
-  }, [session, getToken]);
+  }, [userId, getToken]);
 
   return <>{children}</>;
 };
