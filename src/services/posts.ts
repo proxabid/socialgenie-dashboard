@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { useUser } from "@clerk/clerk-react";
 
 export interface Post {
   content: string;
@@ -8,30 +9,46 @@ export interface Post {
 }
 
 export async function savePost(post: Post) {
-  const { data: userData, error: userError } = await supabase.auth.getUser();
-  if (userError) throw userError;
+  const { data: sessionData } = await supabase.auth.getSession();
+  if (!sessionData.session) {
+    throw new Error("No authenticated session found");
+  }
+
+  console.log("Saving post with user ID:", sessionData.session.user.id);
 
   const { error } = await supabase.from('posts').insert({
     content: post.content,
     prompt: post.prompt,
     tags: post.tags,
-    user_id: userData.user.id,
+    user_id: sessionData.session.user.id,
     created_at: new Date().toISOString()
   });
 
-  if (error) throw error;
+  if (error) {
+    console.error("Error saving post:", error);
+    throw error;
+  }
 }
 
 export async function getPosts(): Promise<Post[]> {
-  const { data: userData, error: userError } = await supabase.auth.getUser();
-  if (userError) throw userError;
+  const { data: sessionData } = await supabase.auth.getSession();
+  if (!sessionData.session) {
+    console.error("No authenticated session found");
+    return [];
+  }
+
+  console.log("Fetching posts for user ID:", sessionData.session.user.id);
 
   const { data, error } = await supabase
     .from('posts')
     .select('*')
+    .eq('user_id', sessionData.session.user.id)
     .order('created_at', { ascending: false });
 
-  if (error) throw error;
+  if (error) {
+    console.error("Error fetching posts:", error);
+    throw error;
+  }
 
   return data.map(post => ({
     content: post.content,
