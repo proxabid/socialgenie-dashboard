@@ -23,35 +23,53 @@ const SessionSync = ({ children }: { children: React.ReactNode }) => {
     const syncSession = async () => {
       try {
         if (userId) {
-          const token = await getToken();
-          console.log("Got Clerk token:", !!token);
+          // Get JWT token from Clerk
+          const token = await getToken({
+            skipCache: true  // Force fresh token
+          });
+          
+          console.log("Attempting to sync session for user:", userId);
           
           if (token) {
-            console.log("Setting Supabase session with Clerk token");
-            const { error } = await supabase.auth.setSession({
+            console.log("Setting Supabase session with token");
+            
+            const { data, error } = await supabase.auth.setSession({
               access_token: token,
-              refresh_token: "",
+              refresh_token: token, // Use same token as refresh token
             });
             
             if (error) {
-              console.error("Error setting Supabase session:", error);
+              console.error("Failed to set Supabase session:", error);
+              // Try signing out and back in if session setting fails
+              await supabase.auth.signOut();
+              const { error: retryError } = await supabase.auth.setSession({
+                access_token: token,
+                refresh_token: token,
+              });
+              if (retryError) {
+                console.error("Retry failed:", retryError);
+              } else {
+                console.log("Successfully set session after retry");
+              }
             } else {
-              console.log("Successfully set Supabase session");
-              // Verify the session was set
-              const { data: { session } } = await supabase.auth.getSession();
-              console.log("Current Supabase session:", !!session);
+              console.log("Successfully set Supabase session:", !!data.session);
             }
+            
+            // Verify the session
+            const { data: { session } } = await supabase.auth.getSession();
+            console.log("Current Supabase session status:", !!session);
+          } else {
+            console.error("No token received from Clerk");
           }
         } else {
-          console.log("No Clerk session, signing out from Supabase");
+          console.log("No Clerk user ID, signing out from Supabase");
           await supabase.auth.signOut();
         }
       } catch (error) {
-        console.error("Error in session sync:", error);
+        console.error("Session sync error:", error);
       }
     };
 
-    console.log("SessionSync effect running, userId:", userId);
     syncSession();
   }, [userId, getToken]);
 
