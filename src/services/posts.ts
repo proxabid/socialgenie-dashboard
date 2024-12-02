@@ -1,3 +1,5 @@
+import { supabase } from "@/integrations/supabase/client";
+
 export interface Post {
   content: string;
   prompt: string;
@@ -5,15 +7,36 @@ export interface Post {
   tags: string[];
 }
 
-const POSTS_KEY = 'generated-posts';
+export async function savePost(post: Post) {
+  const { data: userData, error: userError } = await supabase.auth.getUser();
+  if (userError) throw userError;
 
-export function savePost(post: Post) {
-  const posts = getPosts();
-  posts.unshift(post);
-  localStorage.setItem(POSTS_KEY, JSON.stringify(posts));
+  const { error } = await supabase.from('posts').insert({
+    content: post.content,
+    prompt: post.prompt,
+    tags: post.tags,
+    user_id: userData.user.id,
+    created_at: new Date().toISOString()
+  });
+
+  if (error) throw error;
 }
 
-export function getPosts(): Post[] {
-  const posts = localStorage.getItem(POSTS_KEY);
-  return posts ? JSON.parse(posts) : [];
+export async function getPosts(): Promise<Post[]> {
+  const { data: userData, error: userError } = await supabase.auth.getUser();
+  if (userError) throw userError;
+
+  const { data, error } = await supabase
+    .from('posts')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+
+  return data.map(post => ({
+    content: post.content,
+    prompt: post.prompt,
+    timestamp: post.created_at,
+    tags: post.tags || []
+  }));
 }

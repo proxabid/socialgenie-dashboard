@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import { useQuery } from "@tanstack/react-query";
 
 const pastelColors = [
   'bg-[#F2FCE2]/40', // Soft Green with reduced opacity
@@ -27,21 +28,18 @@ const pastelColors = [
 ];
 
 export function PostFeed() {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [tags, setTags] = useState(getTags());
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const { toast } = useToast();
+  const [tags, setTags] = useState(getTags());
+
+  const { data: posts = [], isLoading } = useQuery({
+    queryKey: ['posts'],
+    queryFn: getPosts,
+  });
 
   useEffect(() => {
-    setPosts(getPosts());
-    const handleStorageChange = () => {
-      setPosts(getPosts());
-      setTags(getTags());
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    setTags(getTags());
   }, []);
 
   const getTagIcon = (tagName: string) => {
@@ -63,6 +61,14 @@ export function PostFeed() {
   const getRandomPastelColor = () => {
     return pastelColors[Math.floor(Math.random() * pastelColors.length)];
   };
+
+  if (isLoading) {
+    return (
+      <Card className="p-8 text-center">
+        <p>Loading posts...</p>
+      </Card>
+    );
+  }
 
   return (
     <Card className="bg-white/30 shadow-sm border border-gray-100/50 rounded-xl overflow-hidden backdrop-blur-sm">

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -8,8 +8,10 @@ import { savePost } from "@/services/posts";
 import { TagSelector } from "./TagSelector";
 import { Card } from "@/components/ui/card";
 import { Eye } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function PostGenerator() {
+  const queryClient = useQueryClient();
   const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);
   const [generatedContent, setGeneratedContent] = useState("");
@@ -43,12 +45,15 @@ export function PostGenerator() {
       
       const wordCount = response.split(' ').length;
       updateStats(wordCount);
-      savePost({ 
+      
+      await savePost({ 
         content: response, 
         prompt, 
         timestamp: new Date().toISOString(),
         tags: selectedTags
       });
+      
+      queryClient.invalidateQueries({ queryKey: ['posts'] });
       
       toast.success("Post generated successfully!");
     } catch (error) {
@@ -60,7 +65,6 @@ export function PostGenerator() {
   };
 
   const formatContent = (content: string) => {
-    // Split content by periods and filter out empty strings
     return content
       .split('.')
       .filter(sentence => sentence.trim())
