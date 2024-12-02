@@ -1,5 +1,5 @@
 import { SidebarProvider, Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
-import { Settings, BarChart2, History, Calendar, MessageSquare, Lightbulb, Tags, Bell, Share2, User } from "lucide-react";
+import { Settings, BarChart2, History, Calendar, MessageSquare, Lightbulb, Tags, Bell, Share2, User, Monitor, Smartphone, Type } from "lucide-react";
 import { getTags } from "@/services/tags";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -12,6 +12,14 @@ interface DashboardLayoutProps {
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const tags = getTags();
   const { user } = useUser();
+
+  const getTagIcon = (tagName: string) => {
+    const lowerName = tagName.toLowerCase();
+    if (lowerName.includes('web')) return <Monitor className="w-3 h-3" />;
+    if (lowerName.includes('mobile')) return <Smartphone className="w-3 h-3" />;
+    if (lowerName.includes('typography')) return <Type className="w-3 h-3" />;
+    return <Tags className="w-3 h-3" />;
+  };
 
   return (
     <SidebarProvider>
@@ -61,13 +69,19 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             <SidebarGroup>
               <SidebarGroupLabel className="text-xs font-semibold text-gray-400 uppercase px-4">Tags</SidebarGroupLabel>
               <SidebarGroupContent>
-                <div className="p-4 space-y-2">
+                <div className="p-4 space-y-2 bg-gray-50 rounded-lg mx-4">
                   {tags.map((tag) => (
                     <Badge
                       key={tag.id}
                       variant="outline"
-                      className={cn("w-full justify-start cursor-pointer hover:bg-gray-50", tag.color)}
+                      className={cn(
+                        "w-full justify-start cursor-pointer hover:bg-gray-100 px-3 py-1.5 rounded-full",
+                        "bg-white text-gray-700 border border-gray-200",
+                        "flex items-center gap-2 text-xs font-medium transition-all duration-200",
+                        "group hover:border-blue-200 hover:text-blue-600 hover:bg-blue-50"
+                      )}
                     >
+                      {getTagIcon(tag.name)}
                       {tag.name}
                     </Badge>
                   ))}
