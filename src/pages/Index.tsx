@@ -9,34 +9,17 @@ import { getApiKey, setApiKey } from "@/services/openai";
 import { toast } from "sonner";
 import { SignedIn, SignedOut, RedirectToSignIn, useUser, useClerk } from "@clerk/clerk-react";
 import { LineChart, Line, ResponsiveContainer } from "recharts";
+import { useStats } from "@/services/stats";
 
 const Index = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [apiKey, setApiKeyState] = useState(getApiKey() || "");
   const { user } = useUser();
   const { signOut } = useClerk();
-
-  // Stats state with actual metrics
-  const [stats, setStats] = useState({
-    totalPosts: {
-      value: 128,
-      trend: +12,
-      data: Array.from({ length: 10 }, (_, i) => ({ value: 100 + Math.random() * 50 }))
-    },
-    totalWords: {
-      value: 25600,
-      trend: +8,
-      data: Array.from({ length: 10 }, (_, i) => ({ value: 20000 + Math.random() * 10000 }))
-    },
-    streak: {
-      value: 7,
-      trend: +1,
-      data: Array.from({ length: 10 }, (_, i) => ({ value: 5 + Math.random() * 5 }))
-    }
-  });
+  const { data: stats, isLoading } = useStats();
 
   const StatCard = ({ title, value, trend, data, icon: Icon, gradient }) => (
-    <Card className={`p-6 ${gradient} text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300`}>
+    <Card className={`p-6 ${gradient} text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-in`}>
       <div className="flex justify-between items-start mb-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
@@ -55,7 +38,7 @@ const Index = () => {
           <LineChart data={data}>
             <Line 
               type="monotone" 
-              dataKey="value" 
+              dataKey="count" 
               stroke="rgba(255,255,255,0.8)" 
               strokeWidth={2} 
               dot={false}
@@ -72,6 +55,10 @@ const Index = () => {
     toast.success("API key saved successfully");
     setShowSettings(false);
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -121,25 +108,25 @@ const Index = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <StatCard 
                 title="Total Posts Generated" 
-                value={stats.totalPosts.value}
-                trend={stats.totalPosts.trend}
-                data={stats.totalPosts.data}
+                value={stats.totalPosts}
+                trend={10}
+                data={stats.history.posts.slice(-10)}
                 icon={PenTool}
                 gradient="bg-gradient-to-r from-violet-500 to-purple-500"
               />
               <StatCard 
                 title="Words Written" 
-                value={stats.totalWords.value}
-                trend={stats.totalWords.trend}
-                data={stats.totalWords.data}
+                value={stats.totalWords}
+                trend={8}
+                data={stats.history.words.slice(-10)}
                 icon={TrendingUp}
                 gradient="bg-gradient-to-r from-blue-500 to-cyan-500"
               />
               <StatCard 
                 title="Current Streak" 
-                value={stats.streak.value}
-                trend={stats.streak.trend}
-                data={stats.streak.data}
+                value={stats.currentStreak}
+                trend={stats.currentStreak > 0 ? 100 : 0}
+                data={stats.history.posts.slice(-10).map(post => ({ count: stats.currentStreak }))}
                 icon={Flame}
                 gradient="bg-gradient-to-r from-orange-500 to-red-500"
               />
