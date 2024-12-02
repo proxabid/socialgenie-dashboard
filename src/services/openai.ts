@@ -1,26 +1,19 @@
-import { toast } from "sonner";
+export function getApiKey(): string {
+  return localStorage.getItem("openai-api-key") || "";
+}
 
-const API_KEY_STORAGE_KEY = "openai_api_key";
+export function setApiKey(key: string) {
+  localStorage.setItem("openai-api-key", key);
+}
 
-export const getApiKey = () => {
-  return localStorage.getItem(API_KEY_STORAGE_KEY);
-};
-
-export const setApiKey = (key: string) => {
-  localStorage.setItem(API_KEY_STORAGE_KEY, key);
-};
-
-export const generatePosts = async (prompt: string): Promise<string[]> => {
+export async function generatePosts(prompt: string): Promise<string[]> {
   const apiKey = getApiKey();
-  
   if (!apiKey) {
-    toast.error("Please set your OpenAI API key in settings");
-    return [];
+    throw new Error("Please set your OpenAI API key in settings");
   }
 
-  console.log("Generating posts with prompt:", prompt);
-
   try {
+    console.log("Generating posts with prompt:", prompt);
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -32,15 +25,24 @@ export const generatePosts = async (prompt: string): Promise<string[]> => {
         messages: [
           {
             role: "system",
-            content: "You are a social media expert that generates engaging posts. For each prompt, generate exactly 6 unique variations, numbered from 1 to 6. Each variation should be different in tone and style. Make sure to number each variation clearly.",
+            content: `You are a LinkedIn post expert that combines the styles of Justin Welsh and Matt Gray, but with a unique voice. 
+            Create engaging posts that:
+            - Use 8th-grade English
+            - Include a two-line hook that's engaging, short, and meaningful
+            - Use frequent whitespace for better readability
+            - Avoid emojis and hashtags
+            - Use realistic numbers and statistics
+            - Avoid cliché phrases like "Here is the truth"
+            - Write in markdown format with proper spacing
+            - Each post should be 30-40 lines long`,
           },
           {
             role: "user",
-            content: `Generate 6 unique variations of a social media post for the following prompt: ${prompt}. Number each variation from 1 to 6.`,
+            content: `Generate 6 unique variations of a LinkedIn post about: ${prompt}. Number each variation from 1 to 6.`,
           },
         ],
-        temperature: 0.8,
-        max_tokens: 2000,
+        temperature: 0.9,
+        max_tokens: 2500,
       }),
     });
 
@@ -68,7 +70,6 @@ export const generatePosts = async (prompt: string): Promise<string[]> => {
     return variations;
   } catch (error) {
     console.error("Error generating posts:", error);
-    toast.error(error instanceof Error ? error.message : "Failed to generate posts. Please try again.");
-    return [];
+    throw error;
   }
 }
