@@ -16,14 +16,14 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 
 const pastelColors = [
-  'bg-[#F2FCE2]', // Soft Green
-  'bg-[#FEF7CD]', // Soft Yellow
-  'bg-[#FEC6A1]', // Soft Orange
-  'bg-[#E5DEFF]', // Soft Purple
-  'bg-[#FFDEE2]', // Soft Pink
-  'bg-[#FDE1D3]', // Soft Peach
-  'bg-[#D3E4FD]', // Soft Blue
-  'bg-[#F1F0FB]', // Soft Gray
+  'bg-[#F2FCE2]/40', // Soft Green with reduced opacity
+  'bg-[#FEF7CD]/40', // Soft Yellow with reduced opacity
+  'bg-[#FEC6A1]/40', // Soft Orange with reduced opacity
+  'bg-[#E5DEFF]/40', // Soft Purple with reduced opacity
+  'bg-[#FFDEE2]/40', // Soft Pink with reduced opacity
+  'bg-[#FDE1D3]/40', // Soft Peach with reduced opacity
+  'bg-[#D3E4FD]/40', // Soft Blue with reduced opacity
+  'bg-[#F1F0FB]/40', // Soft Gray with reduced opacity
 ];
 
 export function PostFeed() {
@@ -65,19 +65,19 @@ export function PostFeed() {
   };
 
   return (
-    <Card className="bg-white/50 shadow-sm border border-gray-100 rounded-xl overflow-hidden backdrop-blur-sm">
-      <div className="p-8 border-b border-gray-100">
+    <Card className="bg-white/30 shadow-sm border border-gray-100/50 rounded-xl overflow-hidden backdrop-blur-sm">
+      <div className="p-8 border-b border-gray-100/50">
         <h2 className="text-xl font-semibold text-gray-900">Generated Posts</h2>
       </div>
       <ScrollArea className="h-[600px]">
-        <div className="p-8">
+        <div className="p-12">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-8">
             {posts.map((post, index) => (
               <Card 
                 key={index} 
-                className={`relative group overflow-hidden hover:shadow-lg transition-all duration-300 ${getRandomPastelColor()} border-2 border-gray-100/50 hover:border-gray-200/70 rounded-xl`}
+                className={`relative group overflow-hidden hover:shadow-lg transition-all duration-300 ${getRandomPastelColor()} border border-gray-200/30 hover:border-gray-300/50 rounded-xl`}
               >
-                <div className="p-8 space-y-6">
+                <div className="p-10 space-y-6">
                   <div className="flex justify-between items-start gap-4">
                     <p className="text-sm text-gray-600 font-medium line-clamp-1">
                       Prompt: {post.prompt}
@@ -90,7 +90,7 @@ export function PostFeed() {
                     <p className="text-gray-700 leading-relaxed line-clamp-3">
                       {post.content}
                     </p>
-                    <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white/80 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white/60 to-transparent" />
                   </div>
                   {post.tags && post.tags.length > 0 && (
                     <div className="flex gap-2 flex-wrap">
@@ -100,7 +100,7 @@ export function PostFeed() {
                           <Badge 
                             key={tag.id} 
                             variant="secondary"
-                            className="bg-white/80 text-gray-700 backdrop-blur-sm px-3 py-1 text-xs border border-gray-200/50"
+                            className="bg-white/60 text-gray-700 backdrop-blur-sm px-3 py-1 text-xs border border-gray-200/30"
                           >
                             {getTagIcon(tag.name)}
                             <span className="ml-1.5">{tag.name}</span>
@@ -110,7 +110,7 @@ export function PostFeed() {
                       {post.tags.length > 2 && (
                         <Badge 
                           variant="secondary" 
-                          className="bg-white/80 text-gray-700 backdrop-blur-sm px-3 py-1 text-xs border border-gray-200/50"
+                          className="bg-white/60 text-gray-700 backdrop-blur-sm px-3 py-1 text-xs border border-gray-200/30"
                         >
                           +{post.tags.length - 2}
                         </Badge>
@@ -118,11 +118,11 @@ export function PostFeed() {
                     </div>
                   )}
                 </div>
-                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-white/90 to-transparent">
+                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-white/80 via-white/40 to-transparent">
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="w-full bg-white/80 hover:bg-white/90 backdrop-blur-sm border border-gray-200/50"
+                    className="w-full bg-white/60 hover:bg-white/80 backdrop-blur-sm border border-gray-200/30"
                     onClick={() => {
                       setSelectedPost(post);
                       setIsPreviewOpen(true);
