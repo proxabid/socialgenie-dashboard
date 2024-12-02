@@ -52,9 +52,12 @@ export function PostFeed() {
                         <Badge 
                           key={tag.id} 
                           variant="secondary"
-                          className="bg-gray-50 text-gray-600 hover:bg-gray-100"
+                          className="
+                            bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300
+                            px-3 py-1 rounded-full flex items-center gap-1
+                          "
                         >
-                          <TagIcon className="w-3 h-3 mr-1" />
+                          <TagIcon className="w-3 h-3" />
                           {tag.name}
                         </Badge>
                       ) : null;

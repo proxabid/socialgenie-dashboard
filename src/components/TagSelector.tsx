@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Tag as TagIcon, Plus } from "lucide-react";
+import { Tag as TagIcon, Plus, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -37,22 +37,34 @@ export function TagSelector({ selectedTags, onTagsChange }: TagSelectorProps) {
 
   return (
     <div className="space-y-2">
-      <div className="flex items-center gap-2 flex-wrap">
+      <div className="flex flex-wrap gap-2">
         {tags.map((tag) => (
           <Badge
             key={tag.id}
             variant={selectedTags.includes(tag.id) ? "default" : "outline"}
-            className="cursor-pointer"
+            className={`
+              cursor-pointer px-3 py-1 rounded-full transition-all duration-200
+              ${selectedTags.includes(tag.id) 
+                ? 'bg-gray-900 text-white hover:bg-gray-800' 
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300'
+              }
+              flex items-center gap-1 group
+            `}
             onClick={() => toggleTag(tag.id)}
           >
-            <TagIcon className="w-3 h-3 mr-1" />
+            <TagIcon className="w-3 h-3" />
             {tag.name}
+            <X className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
           </Badge>
         ))}
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button variant="outline" size="sm">
-              <Plus className="w-4 h-4 mr-1" />
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="rounded-full px-3 py-1 h-auto text-xs font-normal hover:bg-gray-100 dark:hover:bg-gray-800"
+            >
+              <Plus className="w-3 h-3 mr-1" />
               New Tag
             </Button>
           </DialogTrigger>
@@ -65,6 +77,7 @@ export function TagSelector({ selectedTags, onTagsChange }: TagSelectorProps) {
                 placeholder="Tag name"
                 value={newTagName}
                 onChange={(e) => setNewTagName(e.target.value)}
+                className="bg-gray-50 border-none"
               />
               <Button onClick={handleCreateTag}>Create Tag</Button>
             </div>
