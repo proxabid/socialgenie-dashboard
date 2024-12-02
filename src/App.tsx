@@ -25,9 +25,10 @@ const SessionSync = ({ children }: { children: React.ReactNode }) => {
         if (userId) {
           console.log("Starting session sync for user:", userId);
           
-          // Get JWT token from Clerk with minimal configuration
+          // Get JWT token from Clerk with specific template
           const token = await getToken({
             skipCache: true,
+            template: "supabase",
           });
           
           if (!token) {
@@ -40,10 +41,10 @@ const SessionSync = ({ children }: { children: React.ReactNode }) => {
           // First sign out to clear any existing session
           await supabase.auth.signOut();
           
-          // Set the new session
+          // Set the new session with the token
           const { data, error } = await supabase.auth.setSession({
             access_token: token,
-            refresh_token: token
+            refresh_token: token,
           });
           
           if (error) {
