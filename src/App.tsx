@@ -25,9 +25,6 @@ const SessionSync = ({ children }: { children: React.ReactNode }) => {
         if (userId) {
           console.log("Starting session sync for user:", userId);
           
-          // Clear any existing session first
-          await supabase.auth.signOut();
-          
           // Get JWT token from Clerk with the 'supabase' template
           const token = await getToken({
             template: "supabase"
@@ -38,7 +35,7 @@ const SessionSync = ({ children }: { children: React.ReactNode }) => {
             return;
           }
 
-          console.log("Received token from Clerk:", token.substring(0, 20) + "...");
+          console.log("Received token from Clerk");
           
           // Set the new session with the token
           const { data, error } = await supabase.auth.setSession({
