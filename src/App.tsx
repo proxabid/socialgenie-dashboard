@@ -23,21 +23,35 @@ const SessionSync = ({ children }: { children: React.ReactNode }) => {
     const syncSession = async () => {
       try {
         if (userId) {
-          const token = await getToken();
-          console.log("Setting Supabase session with Clerk token");
-          await supabase.auth.setSession({
-            access_token: token || "",
-            refresh_token: "",
-          });
+          const token = await getToken({ template: "supabase" });
+          console.log("Got Clerk token for Supabase:", !!token);
+          
+          if (token) {
+            console.log("Setting Supabase session with Clerk token");
+            const { error } = await supabase.auth.setSession({
+              access_token: token,
+              refresh_token: "",
+            });
+            
+            if (error) {
+              console.error("Error setting Supabase session:", error);
+            } else {
+              console.log("Successfully set Supabase session");
+              // Verify the session was set
+              const { data: { session } } = await supabase.auth.getSession();
+              console.log("Current Supabase session:", !!session);
+            }
+          }
         } else {
           console.log("No Clerk session, signing out from Supabase");
           await supabase.auth.signOut();
         }
       } catch (error) {
-        console.error("Error syncing session:", error);
+        console.error("Error in session sync:", error);
       }
     };
 
+    console.log("SessionSync effect running, userId:", userId);
     syncSession();
   }, [userId, getToken]);
 
