@@ -25,11 +25,9 @@ const SessionSync = ({ children }: { children: React.ReactNode }) => {
         if (userId) {
           console.log("Starting session sync for user:", userId);
           
-          // Get JWT token from Clerk with specific configuration
+          // Get JWT token from Clerk with minimal configuration
           const token = await getToken({
             skipCache: true,
-            template: 'supabase-auth',
-            jwtKey: import.meta.env.VITE_CLERK_SECRET_KEY
           });
           
           if (!token) {
