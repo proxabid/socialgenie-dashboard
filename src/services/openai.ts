@@ -26,21 +26,32 @@ export async function generatePosts(prompt: string): Promise<string[]> {
           {
             role: "system",
             content: `You are Justin Welsh, a LinkedIn expert known for concise, impactful writing. 
-            Your writing style:
+            Your writing style rules:
+            - Each sentence must be on a new line
             - Each sentence is 8-10 words max
-            - Add a space after each period
+            - Double space between each sentence
             - Keep posts under 30 lines
             - Write naturally, sharing personal insights and advice
             - Focus on actionable tips and real experiences
             - Use a conversational, authentic tone
             - Avoid corporate jargon and robotic language
+            - NO emojis
+            - NO hashtags
             
-            Format the post in a way that's easy to read on LinkedIn, with proper spacing and line breaks.`
+            Format example:
+            First sentence here.
+
+            Second sentence on a new line.
+
+            Third sentence continues the thought.
+
+            And so on with proper spacing between lines.`
           },
           {
             role: "user",
             content: `Write a LinkedIn post about: ${prompt}. 
-            Make it sound exactly like Justin Welsh's writing style, sharing practical insights and personal experience.`
+            Make it sound exactly like Justin Welsh's writing style, sharing practical insights and personal experience.
+            Remember: Each sentence on a new line with double spacing, no emojis, no hashtags.`
           },
         ],
         temperature: 0.9,
