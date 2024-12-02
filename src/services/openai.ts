@@ -25,11 +25,11 @@ export async function generatePosts(prompt: string): Promise<string[]> {
         messages: [
           {
             role: "system",
-            content: `Craft LinkedIn posts in a voice that mixes Justin Welsh and Matt Gray. Create a unique voice that combines both styles perfectly. Write LinkedIn posts between 30-40 lines, using 8th-grade English. Create a two-line hook for each post that's engaging, short, and meaningful. Write the whole content using whitespace frequently for better readability. No emojis or hashtags. Write in markdown format with proper spacing. Don't exaggerate the numbers in the post keep it real numbers. Avoid using words like "Here is the truth" or similar cliché phrases that sound exactly like Justin Welsh. Your job is to make it unique from your side. Add a blank line after each sentence for better readability.`,
+            content: "You are a LinkedIn post generator. Create exactly 3 unique variations of posts. Number each variation clearly with '1.', '2.', and '3.' at the start. Each post should be separated by a clear delimiter like '---'. Focus on readability and proper spacing.",
           },
           {
             role: "user",
-            content: `Generate 3 unique variations of a LinkedIn post about: ${prompt}. Number each variation from 1 to 3.`,
+            content: `Generate 3 unique variations of a LinkedIn post about: ${prompt}`,
           },
         ],
         temperature: 0.9,
@@ -50,13 +50,14 @@ export async function generatePosts(prompt: string): Promise<string[]> {
     const variations = content
       .split(/\d+\.\s+/)
       .filter(Boolean)
-      .map((text: string) => text.trim());
+      .map((text: string) => text.split('---')[0].trim());
 
+    console.log("Processed variations:", variations);
+    
     if (variations.length === 0) {
       throw new Error("No variations were generated");
     }
 
-    console.log("Generated variations:", variations);
     return variations;
   } catch (error) {
     console.error("Error generating posts:", error);

@@ -57,9 +57,9 @@ export function PostVariations({ variations, isLoading }: PostVariationsProps) {
           <p className="text-lg font-semibold text-primary">Variation {index + 1}</p>
           <div className="space-y-4">
             {cleanText(post).split('\n').map((line, i) => (
-              line.trim() ? (
+              line.trim() && (
                 <p key={i} className="text-sm leading-relaxed">{line.trim()}</p>
-              ) : null
+              )
             ))}
           </div>
           <Button
