@@ -1,5 +1,5 @@
 import { SidebarProvider, Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
-import { Settings, BarChart2, History, Wand2 } from "lucide-react";
+import { Settings, BarChart2, History, Calendar, MessageSquare, Lightbulb } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface DashboardLayoutProps {
@@ -18,14 +18,26 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 <SidebarMenu>
                   <SidebarMenuItem>
                     <SidebarMenuButton className="w-full">
-                      <Wand2 className="w-4 h-4 mr-2" />
-                      <span>Generate</span>
+                      <MessageSquare className="w-4 h-4 mr-2" />
+                      <span>Generate Post</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton className="w-full">
+                      <Calendar className="w-4 h-4 mr-2" />
+                      <span>View Calendar</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
                     <SidebarMenuButton className="w-full">
                       <History className="w-4 h-4 mr-2" />
-                      <span>History</span>
+                      <span>Analyze History</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton className="w-full">
+                      <Lightbulb className="w-4 h-4 mr-2" />
+                      <span>Explore Ideas</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
