@@ -23,6 +23,10 @@ export function PostVariations({ variations, isLoading }: PostVariationsProps) {
     });
   };
 
+  const cleanText = (text: string) => {
+    return text.replace(/[*#`]/g, '').trim();
+  };
+
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -51,10 +55,10 @@ export function PostVariations({ variations, isLoading }: PostVariationsProps) {
           className="p-6 space-y-4 animate-fade-in hover:shadow-lg transition-shadow duration-200"
         >
           <p className="text-lg font-semibold text-primary">Variation {index + 1}</p>
-          <div className="prose prose-sm max-w-none">
-            {post.split('\n').map((line, i) => (
+          <div className="space-y-4">
+            {cleanText(post).split('\n').map((line, i) => (
               line.trim() ? (
-                <p key={i} className="mb-4 text-sm leading-relaxed">{line.trim()}</p>
+                <p key={i} className="text-sm leading-relaxed">{line.trim()}</p>
               ) : null
             ))}
           </div>
@@ -62,7 +66,7 @@ export function PostVariations({ variations, isLoading }: PostVariationsProps) {
             variant="outline"
             size="sm"
             className="w-full hover:scale-105 transition-transform duration-200"
-            onClick={() => copyToClipboard(post)}
+            onClick={() => copyToClipboard(cleanText(post))}
           >
             <Copy className="w-4 h-4 mr-2" />
             Copy
