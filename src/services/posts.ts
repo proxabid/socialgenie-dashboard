@@ -2,13 +2,14 @@ export interface Post {
   content: string;
   prompt: string;
   timestamp: string;
+  tags: string[];
 }
 
 const POSTS_KEY = 'generated-posts';
 
 export function savePost(post: Post) {
   const posts = getPosts();
-  posts.unshift(post); // Add new post at the beginning
+  posts.unshift(post);
   localStorage.setItem(POSTS_KEY, JSON.stringify(posts));
 }
 

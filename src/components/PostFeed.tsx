@@ -2,18 +2,20 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { getPosts, type Post } from "@/services/posts";
+import { getTags } from "@/services/tags";
 import { formatDistanceToNow } from "date-fns";
+import { Badge } from "@/components/ui/badge";
+import { Tag as TagIcon } from "lucide-react";
 
 export function PostFeed() {
   const [posts, setPosts] = useState<Post[]>([]);
+  const [tags, setTags] = useState(getTags());
 
   useEffect(() => {
-    // Initial load
     setPosts(getPosts());
-
-    // Set up event listener for storage changes
     const handleStorageChange = () => {
       setPosts(getPosts());
+      setTags(getTags());
     };
 
     window.addEventListener('storage', handleStorageChange);
@@ -40,6 +42,19 @@ export function PostFeed() {
                     </span>
                   </div>
                   <p className="text-sm">{post.content}</p>
+                  {post.tags && post.tags.length > 0 && (
+                    <div className="flex gap-2 flex-wrap mt-2">
+                      {post.tags.map((tagId) => {
+                        const tag = tags.find(t => t.id === tagId);
+                        return tag ? (
+                          <Badge key={tag.id} variant="secondary">
+                            <TagIcon className="w-3 h-3 mr-1" />
+                            {tag.name}
+                          </Badge>
+                        ) : null;
+                      })}
+                    </div>
+                  )}
                 </div>
               </Card>
             ))}

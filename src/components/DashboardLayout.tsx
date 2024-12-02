@@ -1,5 +1,7 @@
 import { SidebarProvider, Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
-import { Settings, BarChart2, History, Calendar, MessageSquare, Lightbulb } from "lucide-react";
+import { Settings, BarChart2, History, Calendar, MessageSquare, Lightbulb, Tags } from "lucide-react";
+import { getTags } from "@/services/tags";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 interface DashboardLayoutProps {
@@ -7,6 +9,8 @@ interface DashboardLayoutProps {
 }
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
+  const tags = getTags();
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-[#F8F8F9]">
@@ -53,6 +57,27 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+            <SidebarGroup>
+              <SidebarGroupLabel className="text-[#6B7280]">
+                <div className="flex items-center gap-2">
+                  <Tags className="w-4 h-4" />
+                  Tags
+                </div>
+              </SidebarGroupLabel>
+              <SidebarGroupContent>
+                <div className="p-4 space-y-2">
+                  {tags.map((tag) => (
+                    <Badge
+                      key={tag.id}
+                      variant="outline"
+                      className={cn("w-full justify-start cursor-pointer", tag.color)}
+                    >
+                      {tag.name}
+                    </Badge>
+                  ))}
+                </div>
               </SidebarGroupContent>
             </SidebarGroup>
             <SidebarGroup>
