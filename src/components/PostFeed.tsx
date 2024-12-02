@@ -70,14 +70,14 @@ export function PostFeed() {
         <h2 className="text-xl font-semibold text-gray-900">Generated Posts</h2>
       </div>
       <ScrollArea className="h-[600px]">
-        <div className="p-12">
+        <div className="p-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-8">
             {posts.map((post, index) => (
               <Card 
                 key={index} 
                 className={`relative group overflow-hidden hover:shadow-lg transition-all duration-300 ${getRandomPastelColor()} border border-gray-200/30 hover:border-gray-300/50 rounded-xl`}
               >
-                <div className="p-10 space-y-6">
+                <div className="p-6 space-y-6">
                   <div className="flex justify-between items-start gap-4">
                     <p className="text-sm text-gray-600 font-medium line-clamp-1">
                       Prompt: {post.prompt}
@@ -100,17 +100,17 @@ export function PostFeed() {
                           <Badge 
                             key={tag.id} 
                             variant="secondary"
-                            className="bg-white/60 text-gray-700 backdrop-blur-sm px-3 py-1 text-xs border border-gray-200/30"
+                            className="bg-white/80 text-gray-700 backdrop-blur-md px-4 py-1.5 text-sm font-medium border border-gray-200/50 shadow-sm hover:bg-white/90 transition-all duration-200"
                           >
                             {getTagIcon(tag.name)}
-                            <span className="ml-1.5">{tag.name}</span>
+                            <span className="ml-2">{tag.name}</span>
                           </Badge>
                         ) : null;
                       })}
                       {post.tags.length > 2 && (
                         <Badge 
                           variant="secondary" 
-                          className="bg-white/60 text-gray-700 backdrop-blur-sm px-3 py-1 text-xs border border-gray-200/30"
+                          className="bg-white/80 text-gray-700 backdrop-blur-md px-4 py-1.5 text-sm font-medium border border-gray-200/50 shadow-sm hover:bg-white/90 transition-all duration-200"
                         >
                           +{post.tags.length - 2}
                         </Badge>
@@ -122,7 +122,7 @@ export function PostFeed() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="w-full bg-white/60 hover:bg-white/80 backdrop-blur-sm border border-gray-200/30"
+                    className="w-full bg-white/80 hover:bg-white/90 backdrop-blur-md border border-gray-200/50 shadow-sm"
                     onClick={() => {
                       setSelectedPost(post);
                       setIsPreviewOpen(true);
