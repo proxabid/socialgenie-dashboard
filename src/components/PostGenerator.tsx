@@ -6,6 +6,7 @@ import { updateStats } from "@/services/stats";
 import { generatePosts } from "@/services/openai";
 import { savePost } from "@/services/posts";
 import { TagSelector } from "./TagSelector";
+import { Card } from "@/components/ui/card";
 
 export function PostGenerator() {
   const [prompt, setPrompt] = useState("");
@@ -39,23 +40,34 @@ export function PostGenerator() {
   };
 
   return (
-    <div className="space-y-4">
-      <Input
-        type="text"
-        placeholder="Enter your post prompt..."
-        value={prompt}
-        onChange={(e) => setPrompt(e.target.value)}
-      />
-      <TagSelector selectedTags={selectedTags} onTagsChange={setSelectedTags} />
-      <Button onClick={handleGenerate} disabled={loading}>
-        {loading ? "Generating..." : "Generate Post"}
-      </Button>
+    <Card className="p-6 space-y-4 bg-white shadow-sm border border-gray-100">
+      <div className="space-y-2">
+        <h2 className="text-xl font-semibold">Generate New Post</h2>
+        <p className="text-sm text-gray-500">Enter your prompt to generate a social media post</p>
+      </div>
+      <div className="space-y-4">
+        <Input
+          type="text"
+          placeholder="Enter your post prompt..."
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+          className="w-full bg-gray-50 border-none"
+        />
+        <TagSelector selectedTags={selectedTags} onTagsChange={setSelectedTags} />
+        <Button 
+          onClick={handleGenerate} 
+          disabled={loading}
+          className="w-full bg-blue-500 hover:bg-blue-600"
+        >
+          {loading ? "Generating..." : "Generate Post"}
+        </Button>
+      </div>
       {generatedContent && (
-        <div className="mt-4 bg-gray-100 p-4 rounded">
-          <h2 className="font-bold">Generated Post:</h2>
-          <p>{generatedContent}</p>
+        <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+          <h3 className="font-medium mb-2">Generated Post:</h3>
+          <p className="text-gray-600">{generatedContent}</p>
         </div>
       )}
-    </div>
+    </Card>
   );
 }

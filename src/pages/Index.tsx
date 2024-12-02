@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Settings, LogOut, TrendingUp, Flame, PenTool } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { getApiKey, setApiKey } from "@/services/openai";
 import { toast } from "sonner";
 import { SignedIn, SignedOut, RedirectToSignIn, useUser, useClerk } from "@clerk/clerk-react";
@@ -20,7 +20,7 @@ const Index = () => {
   const { data: stats, isLoading } = useStats();
 
   const StatCard = ({ title, value, trend, data, icon: Icon, gradient }) => (
-    <Card className={`p-6 ${gradient} text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-in`}>
+    <Card className={`p-6 ${gradient} text-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300`}>
       <div className="flex justify-between items-start mb-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
@@ -67,9 +67,9 @@ const Index = () => {
         <DashboardLayout>
           <div className="space-y-6">
             <div className="flex justify-between items-center">
-              <div className="space-y-2">
-                <h1 className="text-4xl font-bold">Welcome back, {user?.firstName || 'User'}</h1>
-                <p className="text-muted-foreground">
+              <div className="space-y-1">
+                <h1 className="text-2xl font-semibold text-gray-900">Welcome back, {user?.firstName || 'User'}</h1>
+                <p className="text-sm text-gray-500">
                   Generate amazing social media posts with AI
                 </p>
               </div>
@@ -77,6 +77,7 @@ const Index = () => {
                 <Button
                   variant="outline"
                   onClick={() => setShowSettings(!showSettings)}
+                  className="text-gray-600 hover:bg-gray-50"
                 >
                   <Settings className="w-4 h-4 mr-2" />
                   Settings
@@ -84,6 +85,7 @@ const Index = () => {
                 <Button
                   variant="outline"
                   onClick={() => signOut()}
+                  className="text-gray-600 hover:bg-gray-50"
                 >
                   <LogOut className="w-4 h-4 mr-2" />
                   Sign Out
@@ -92,14 +94,15 @@ const Index = () => {
             </div>
 
             {showSettings && (
-              <Card className="p-4 space-y-4">
-                <h2 className="font-semibold">OpenAI API Key</h2>
+              <Card className="p-6 bg-white shadow-sm border border-gray-100">
+                <h2 className="text-lg font-semibold mb-4">OpenAI API Key</h2>
                 <div className="flex gap-2">
                   <Input
                     type="password"
                     value={apiKey}
                     onChange={(e) => setApiKeyState(e.target.value)}
                     placeholder="Enter your OpenAI API key"
+                    className="bg-gray-50 border-none"
                   />
                   <Button onClick={saveApiKey}>Save</Button>
                 </div>
@@ -135,7 +138,6 @@ const Index = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div>
-                <h2 className="text-2xl font-bold mb-4">Generate New Post</h2>
                 <PostGenerator />
               </div>
               <div>

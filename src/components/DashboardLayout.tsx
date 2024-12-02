@@ -1,8 +1,9 @@
 import { SidebarProvider, Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
-import { Settings, BarChart2, History, Calendar, MessageSquare, Lightbulb, Tags } from "lucide-react";
+import { Settings, BarChart2, History, Calendar, MessageSquare, Lightbulb, Tags, Bell, Share2, User } from "lucide-react";
 import { getTags } from "@/services/tags";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { useUser } from "@clerk/clerk-react";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -10,69 +11,62 @@ interface DashboardLayoutProps {
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const tags = getTags();
+  const { user } = useUser();
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-[#F8F8F9]">
-        <Sidebar className="border-r bg-white">
+      <div className="min-h-screen flex w-full bg-white">
+        <Sidebar className="border-r border-gray-100">
+          <div className="flex items-center gap-2 p-4 border-b border-gray-100">
+            <MessageSquare className="w-6 h-6 text-blue-500" />
+            <span className="font-semibold text-lg">SocialGenie</span>
+          </div>
           <SidebarContent>
             <SidebarGroup>
-              <SidebarGroupLabel className="text-[#6B7280]">Dashboard</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
                   <SidebarMenuItem>
-                    <SidebarMenuButton className="w-full text-[#374151] hover:bg-[#F3F4F6]">
-                      <MessageSquare className="w-4 h-4 mr-2" />
+                    <SidebarMenuButton className="w-full text-gray-600 hover:bg-gray-50 rounded-lg">
+                      <MessageSquare className="w-4 h-4 mr-3" />
                       <span>Generate Post</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
-                    <SidebarMenuButton className="w-full text-[#374151] hover:bg-[#F3F4F6]">
-                      <Calendar className="w-4 h-4 mr-2" />
-                      <span>View Calendar</span>
+                    <SidebarMenuButton className="w-full text-gray-600 hover:bg-gray-50 rounded-lg">
+                      <Calendar className="w-4 h-4 mr-3" />
+                      <span>Calendar</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
-                    <SidebarMenuButton className="w-full text-[#374151] hover:bg-[#F3F4F6]">
-                      <History className="w-4 h-4 mr-2" />
-                      <span>Analyze History</span>
+                    <SidebarMenuButton className="w-full text-gray-600 hover:bg-gray-50 rounded-lg">
+                      <History className="w-4 h-4 mr-3" />
+                      <span>History</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
-                    <SidebarMenuButton className="w-full text-[#374151] hover:bg-[#F3F4F6]">
-                      <Lightbulb className="w-4 h-4 mr-2" />
-                      <span>Explore Ideas</span>
+                    <SidebarMenuButton className="w-full text-gray-600 hover:bg-gray-50 rounded-lg">
+                      <Lightbulb className="w-4 h-4 mr-3" />
+                      <span>Ideas</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
-                    <SidebarMenuButton className="w-full text-[#374151] hover:bg-[#F3F4F6]">
-                      <BarChart2 className="w-4 h-4 mr-2" />
+                    <SidebarMenuButton className="w-full text-gray-600 hover:bg-gray-50 rounded-lg">
+                      <BarChart2 className="w-4 h-4 mr-3" />
                       <span>Analytics</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton className="w-full text-[#374151] hover:bg-[#F3F4F6]">
-                      <Settings className="w-4 h-4 mr-2" />
-                      <span>Settings</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
             <SidebarGroup>
-              <SidebarGroupLabel className="text-[#6B7280]">
-                <div className="flex items-center gap-2">
-                  <Tags className="w-4 h-4" />
-                  Tags
-                </div>
-              </SidebarGroupLabel>
+              <SidebarGroupLabel className="text-xs font-semibold text-gray-400 uppercase px-4">Tags</SidebarGroupLabel>
               <SidebarGroupContent>
                 <div className="p-4 space-y-2">
                   {tags.map((tag) => (
                     <Badge
                       key={tag.id}
                       variant="outline"
-                      className={cn("w-full justify-start cursor-pointer", tag.color)}
+                      className={cn("w-full justify-start cursor-pointer hover:bg-gray-50", tag.color)}
                     >
                       {tag.name}
                     </Badge>
@@ -80,28 +74,37 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 </div>
               </SidebarGroupContent>
             </SidebarGroup>
-            <SidebarGroup>
-              <SidebarGroupLabel className="text-[#6B7280]">Statistics</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <div className="p-4 space-y-4">
-                  <div className="bg-[#F3F4F6] rounded-lg p-3">
-                    <p className="text-sm font-medium text-[#374151]">Posts Generated</p>
-                    <p className="text-2xl font-bold text-[#111827]">128</p>
-                  </div>
-                  <div className="bg-[#F3F4F6] rounded-lg p-3">
-                    <p className="text-sm font-medium text-[#374151]">Success Rate</p>
-                    <p className="text-2xl font-bold text-[#111827]">98%</p>
-                  </div>
-                </div>
-              </SidebarGroupContent>
-            </SidebarGroup>
           </SidebarContent>
         </Sidebar>
-        <main className="flex-1 overflow-auto">
-          <div className="container py-6 space-y-6 animate-fade-in">
-            {children}
-          </div>
-        </main>
+        <div className="flex-1">
+          <header className="h-16 border-b border-gray-100 flex items-center justify-between px-6">
+            <div className="flex items-center gap-4">
+              <input
+                type="search"
+                placeholder="Search..."
+                className="bg-gray-50 border-none rounded-lg px-4 py-2 w-64 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div className="flex items-center gap-4">
+              <button className="p-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                <Bell className="w-5 h-5" />
+              </button>
+              <button className="p-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                <Share2 className="w-5 h-5" />
+              </button>
+              {user?.imageUrl ? (
+                <img src={user.imageUrl} alt="Profile" className="w-8 h-8 rounded-full" />
+              ) : (
+                <User className="w-8 h-8 p-1 bg-gray-100 rounded-full text-gray-600" />
+              )}
+            </div>
+          </header>
+          <main className="p-6">
+            <div className="max-w-7xl mx-auto">
+              {children}
+            </div>
+          </main>
+        </div>
       </div>
     </SidebarProvider>
   );
