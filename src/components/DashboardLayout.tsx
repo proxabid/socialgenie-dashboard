@@ -69,22 +69,24 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             <SidebarGroup>
               <SidebarGroupLabel className="text-xs font-semibold text-gray-400 uppercase px-4">Tags</SidebarGroupLabel>
               <SidebarGroupContent>
-                <div className="p-4 space-y-2 bg-gray-50 rounded-lg mx-4">
-                  {tags.map((tag) => (
-                    <Badge
-                      key={tag.id}
-                      variant="outline"
-                      className={cn(
-                        "w-full justify-start cursor-pointer hover:bg-gray-100 px-3 py-1.5 rounded-full",
-                        "bg-white text-gray-700 border border-gray-200",
-                        "flex items-center gap-2 text-xs font-medium transition-all duration-200",
-                        "group hover:border-blue-200 hover:text-blue-600 hover:bg-blue-50"
-                      )}
-                    >
-                      {getTagIcon(tag.name)}
-                      {tag.name}
-                    </Badge>
-                  ))}
+                <div className="p-4 bg-gray-50 rounded-lg mx-4">
+                  <div className="columns-2 gap-2 space-y-2 [&>*:first-child]:mt-0">
+                    {tags.map((tag) => (
+                      <Badge
+                        key={tag.id}
+                        variant="outline"
+                        className={cn(
+                          "inline-flex w-full break-inside-avoid mb-2 justify-start cursor-pointer hover:bg-gray-100 px-3 py-1.5 rounded-full",
+                          "bg-white text-gray-700 border border-gray-200",
+                          "items-center gap-2 text-xs font-medium transition-all duration-200",
+                          "group hover:border-blue-200 hover:text-blue-600 hover:bg-blue-50"
+                        )}
+                      >
+                        {getTagIcon(tag.name)}
+                        {tag.name}
+                      </Badge>
+                    ))}
+                  </div>
                 </div>
               </SidebarGroupContent>
             </SidebarGroup>
