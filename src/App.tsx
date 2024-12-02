@@ -27,11 +27,7 @@ const SessionSync = ({ children }: { children: React.ReactNode }) => {
           
           // Get JWT token from Clerk with the 'supabase' template
           const token = await getToken({
-            template: "supabase",
-            // Use claims instead of sessionClaims
-            claims: {
-              sub: userId,
-            }
+            template: "supabase"
           });
           
           if (!token) {
