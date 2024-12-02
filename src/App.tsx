@@ -3,7 +3,9 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { ClerkProvider, SignIn, SignUp, SignedIn, SignedOut } from "@clerk/clerk-react";
+import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-react";
+import { CustomSignIn } from "./components/CustomSignIn";
+import { CustomSignUp } from "./components/CustomSignUp";
 import Index from "./pages/Index";
 
 if (!import.meta.env.VITE_CLERK_PUBLISHABLE_KEY) {
@@ -20,14 +22,8 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route
-              path="/sign-in/*"
-              element={<SignIn routing="path" path="/sign-in" redirectUrl="/" />}
-            />
-            <Route
-              path="/sign-up/*"
-              element={<SignUp routing="path" path="/sign-up" redirectUrl="/" />}
-            />
+            <Route path="/sign-in/*" element={<CustomSignIn />} />
+            <Route path="/sign-up/*" element={<CustomSignUp />} />
             <Route
               path="/*"
               element={
