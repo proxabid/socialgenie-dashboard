@@ -25,23 +25,35 @@ const SessionSync = ({ children }: { children: React.ReactNode }) => {
         if (userId) {
           console.log("Starting session sync for user:", userId);
           
-          // Get JWT token from Clerk
-          const token = await getToken({
-            template: "supabase",
-          });
-          
-          if (!token) {
-            console.error("No token received from Clerk");
-            return;
+          // Check localStorage first
+          const storedToken = localStorage.getItem('supabase_token');
+          let token = storedToken;
+
+          if (!storedToken) {
+            // If no token in localStorage, get new one from Clerk
+            token = await getToken({
+              template: "supabase",
+            });
+            
+            if (!token) {
+              console.error("No token received from Clerk");
+              return;
+            }
+
+            // Store the new token
+            localStorage.setItem('supabase_token', token);
+            console.log("New token stored in localStorage");
           }
 
-          console.log("Received token from Clerk");
+          console.log("Using token for Supabase session");
           
           // Create a new session with the token
           const { data: { session }, error: sessionError } = await supabase.auth.getSession();
           
           if (sessionError) {
             console.error("Failed to get Supabase session:", sessionError);
+            // Clear stored token if there's an error
+            localStorage.removeItem('supabase_token');
             return;
           }
 
@@ -55,6 +67,8 @@ const SessionSync = ({ children }: { children: React.ReactNode }) => {
             if (error) {
               console.error("Failed to set Supabase session:", error);
               console.error("Error details:", error.message);
+              // Clear stored token if there's an error
+              localStorage.removeItem('supabase_token');
               return;
             }
             
@@ -63,6 +77,7 @@ const SessionSync = ({ children }: { children: React.ReactNode }) => {
           
         } else {
           console.log("No Clerk user ID, signing out from Supabase");
+          localStorage.removeItem('supabase_token');
           await supabase.auth.signOut();
         }
       } catch (error) {
@@ -70,6 +85,8 @@ const SessionSync = ({ children }: { children: React.ReactNode }) => {
         if (error instanceof Error) {
           console.error("Error details:", error.message);
         }
+        // Clear stored token on any error
+        localStorage.removeItem('supabase_token');
       }
     };
 
