@@ -23,8 +23,8 @@ const SessionSync = ({ children }: { children: React.ReactNode }) => {
     const syncSession = async () => {
       try {
         if (userId) {
-          const token = await getToken({ template: "supabase" });
-          console.log("Got Clerk token for Supabase:", !!token);
+          const token = await getToken();
+          console.log("Got Clerk token:", !!token);
           
           if (token) {
             console.log("Setting Supabase session with Clerk token");
