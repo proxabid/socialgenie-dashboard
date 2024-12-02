@@ -23,44 +23,42 @@ const SessionSync = ({ children }: { children: React.ReactNode }) => {
     const syncSession = async () => {
       try {
         if (userId) {
-          // Get JWT token from Clerk
+          console.log("Starting session sync for user:", userId);
+          
+          // Get JWT token from Clerk with specific configuration
           const token = await getToken({
-            skipCache: true  // Force fresh token
+            skipCache: true,
+            template: 'supabase-auth',
+            jwtKey: import.meta.env.VITE_CLERK_SECRET_KEY
           });
           
-          console.log("Attempting to sync session for user:", userId);
-          
-          if (token) {
-            console.log("Setting Supabase session with token");
-            
-            const { data, error } = await supabase.auth.setSession({
-              access_token: token,
-              refresh_token: token, // Use same token as refresh token
-            });
-            
-            if (error) {
-              console.error("Failed to set Supabase session:", error);
-              // Try signing out and back in if session setting fails
-              await supabase.auth.signOut();
-              const { error: retryError } = await supabase.auth.setSession({
-                access_token: token,
-                refresh_token: token,
-              });
-              if (retryError) {
-                console.error("Retry failed:", retryError);
-              } else {
-                console.log("Successfully set session after retry");
-              }
-            } else {
-              console.log("Successfully set Supabase session:", !!data.session);
-            }
-            
-            // Verify the session
-            const { data: { session } } = await supabase.auth.getSession();
-            console.log("Current Supabase session status:", !!session);
-          } else {
+          if (!token) {
             console.error("No token received from Clerk");
+            return;
           }
+
+          console.log("Received token from Clerk, setting Supabase session");
+          
+          // First sign out to clear any existing session
+          await supabase.auth.signOut();
+          
+          // Set the new session
+          const { data, error } = await supabase.auth.setSession({
+            access_token: token,
+            refresh_token: token
+          });
+          
+          if (error) {
+            console.error("Failed to set Supabase session:", error);
+            return;
+          }
+          
+          console.log("Successfully set Supabase session:", !!data.session);
+          
+          // Verify the session
+          const { data: { session } } = await supabase.auth.getSession();
+          console.log("Verified Supabase session status:", !!session);
+          
         } else {
           console.log("No Clerk user ID, signing out from Supabase");
           await supabase.auth.signOut();
