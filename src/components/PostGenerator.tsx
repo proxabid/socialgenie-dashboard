@@ -38,6 +38,7 @@ export function PostGenerator() {
   const handleGenerate = async () => {
     setLoading(true);
     try {
+      console.log("Generating post with prompt:", prompt);
       const posts = await generatePosts(prompt);
       const response = posts[0];
       setGeneratedContent(response);
@@ -46,6 +47,7 @@ export function PostGenerator() {
       const wordCount = response.split(' ').length;
       updateStats(wordCount);
       
+      console.log("Saving generated post");
       await savePost({ 
         content: response, 
         prompt, 
@@ -53,12 +55,13 @@ export function PostGenerator() {
         tags: selectedTags
       });
       
-      queryClient.invalidateQueries({ queryKey: ['posts'] });
+      console.log("Invalidating posts query");
+      await queryClient.invalidateQueries({ queryKey: ['posts'] });
       
-      toast.success("Post generated successfully!");
+      toast.success("Post generated and saved successfully!");
     } catch (error) {
       console.error("Error generating post:", error);
-      toast.error("Failed to generate post.");
+      toast.error("Failed to generate post. Please try again.");
     } finally {
       setLoading(false);
     }

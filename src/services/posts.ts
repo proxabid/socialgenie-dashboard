@@ -1,5 +1,4 @@
 import { supabase } from "@/integrations/supabase/client";
-import { useUser } from "@clerk/clerk-react";
 
 export interface Post {
   content: string;
@@ -11,6 +10,7 @@ export interface Post {
 export async function savePost(post: Post) {
   const { data: sessionData } = await supabase.auth.getSession();
   if (!sessionData.session) {
+    console.error("No authenticated session found");
     throw new Error("No authenticated session found");
   }
 
@@ -48,6 +48,13 @@ export async function getPosts(): Promise<Post[]> {
   if (error) {
     console.error("Error fetching posts:", error);
     throw error;
+  }
+
+  console.log("Retrieved posts:", data);
+
+  if (!data) {
+    console.log("No posts found");
+    return [];
   }
 
   return data.map(post => ({
