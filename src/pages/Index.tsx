@@ -3,7 +3,7 @@ import { PostGenerator } from "@/components/PostGenerator";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Settings, LogOut, TrendingUp, TrendingDown } from "lucide-react";
+import { Settings, LogOut, TrendingUp, Flame, PenTool } from "lucide-react";
 import { useState, useEffect } from "react";
 import { getApiKey, setApiKey } from "@/services/openai";
 import { toast } from "sonner";
@@ -16,39 +16,37 @@ const Index = () => {
   const { user } = useUser();
   const { signOut } = useClerk();
 
-  // Mock data for demonstration - in a real app, this would come from your backend
+  // Stats state with actual metrics
   const [stats, setStats] = useState({
-    totalRevenue: {
-      value: 4562,
+    totalPosts: {
+      value: 128,
       trend: +12,
-      data: Array.from({ length: 10 }, (_, i) => ({ value: 4000 + Math.random() * 1000 }))
+      data: Array.from({ length: 10 }, (_, i) => ({ value: 100 + Math.random() * 50 }))
     },
-    totalVisitors: {
-      value: 2562,
-      trend: +4,
-      data: Array.from({ length: 10 }, (_, i) => ({ value: 2000 + Math.random() * 1000 }))
+    totalWords: {
+      value: 25600,
+      trend: +8,
+      data: Array.from({ length: 10 }, (_, i) => ({ value: 20000 + Math.random() * 10000 }))
     },
-    totalTransactions: {
-      value: 2262,
-      trend: -0.69,
-      data: Array.from({ length: 10 }, (_, i) => ({ value: 2200 + Math.random() * 200 }))
-    },
-    totalProducts: {
-      value: 2100,
-      trend: +2,
-      data: Array.from({ length: 10 }, (_, i) => ({ value: 2000 + Math.random() * 200 }))
+    streak: {
+      value: 7,
+      trend: +1,
+      data: Array.from({ length: 10 }, (_, i) => ({ value: 5 + Math.random() * 5 }))
     }
   });
 
-  const StatCard = ({ title, value, trend, data, color = "#10B981" }) => (
-    <Card className="p-4 bg-white">
-      <div className="flex justify-between items-start mb-2">
+  const StatCard = ({ title, value, trend, data, icon: Icon, gradient }) => (
+    <Card className={`p-6 ${gradient} text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300`}>
+      <div className="flex justify-between items-start mb-4">
         <div>
-          <p className="text-sm text-gray-500 font-medium">{title}</p>
-          <p className="text-2xl font-bold">${value.toLocaleString()}</p>
+          <div className="flex items-center gap-2 mb-1">
+            <Icon className="w-5 h-5 opacity-80" />
+            <p className="text-sm font-medium opacity-80">{title}</p>
+          </div>
+          <p className="text-3xl font-bold">{value.toLocaleString()}</p>
         </div>
-        <span className={`flex items-center text-sm ${trend >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-          {trend >= 0 ? <TrendingUp className="w-4 h-4 mr-1" /> : <TrendingDown className="w-4 h-4 mr-1" />}
+        <span className={`flex items-center text-sm ${trend >= 0 ? 'text-emerald-100' : 'text-red-100'}`}>
+          <TrendingUp className="w-4 h-4 mr-1" />
           {Math.abs(trend)}%
         </span>
       </div>
@@ -58,7 +56,7 @@ const Index = () => {
             <Line 
               type="monotone" 
               dataKey="value" 
-              stroke={color} 
+              stroke="rgba(255,255,255,0.8)" 
               strokeWidth={2} 
               dot={false}
               isAnimationActive={true}
@@ -120,34 +118,30 @@ const Index = () => {
               </Card>
             )}
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <StatCard 
-                title="Total Revenue" 
-                value={stats.totalRevenue.value}
-                trend={stats.totalRevenue.trend}
-                data={stats.totalRevenue.data}
-                color="#10B981"
+                title="Total Posts Generated" 
+                value={stats.totalPosts.value}
+                trend={stats.totalPosts.trend}
+                data={stats.totalPosts.data}
+                icon={PenTool}
+                gradient="bg-gradient-to-r from-violet-500 to-purple-500"
               />
               <StatCard 
-                title="Total Visitors" 
-                value={stats.totalVisitors.value}
-                trend={stats.totalVisitors.trend}
-                data={stats.totalVisitors.data}
-                color="#3B82F6"
+                title="Words Written" 
+                value={stats.totalWords.value}
+                trend={stats.totalWords.trend}
+                data={stats.totalWords.data}
+                icon={TrendingUp}
+                gradient="bg-gradient-to-r from-blue-500 to-cyan-500"
               />
               <StatCard 
-                title="Total Transactions" 
-                value={stats.totalTransactions.value}
-                trend={stats.totalTransactions.trend}
-                data={stats.totalTransactions.data}
-                color="#EF4444"
-              />
-              <StatCard 
-                title="Total Products" 
-                value={stats.totalProducts.value}
-                trend={stats.totalProducts.trend}
-                data={stats.totalProducts.data}
-                color="#8B5CF6"
+                title="Current Streak" 
+                value={stats.streak.value}
+                trend={stats.streak.trend}
+                data={stats.streak.data}
+                icon={Flame}
+                gradient="bg-gradient-to-r from-orange-500 to-red-500"
               />
             </div>
 
