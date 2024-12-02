@@ -27,7 +27,7 @@ export function PostGenerator() {
         } else {
           clearInterval(interval);
         }
-      }, 30); // Adjust speed as needed
+      }, 30);
 
       return () => clearInterval(interval);
     }
@@ -57,6 +57,15 @@ export function PostGenerator() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const formatContent = (content: string) => {
+    // Split content by periods and filter out empty strings
+    return content
+      .split('.')
+      .filter(sentence => sentence.trim())
+      .map(sentence => sentence.trim() + '.')
+      .join('\n\n');
   };
 
   return (
@@ -101,7 +110,9 @@ export function PostGenerator() {
       {showPreview && generatedContent && (
         <div className="mt-6 p-6 bg-gray-50 rounded-xl border border-gray-200">
           <h3 className="font-medium text-gray-700 mb-3">Preview:</h3>
-          <p className="text-gray-600 leading-relaxed">{previewContent}</p>
+          <div className="text-gray-600 leading-relaxed whitespace-pre-line">
+            {formatContent(previewContent)}
+          </div>
         </div>
       )}
     </Card>
