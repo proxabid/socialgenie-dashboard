@@ -1,5 +1,6 @@
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { PostGenerator } from "@/components/PostGenerator";
+import { PostFeed } from "@/components/PostFeed";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -132,7 +133,15 @@ const Index = () => {
               />
             </div>
 
-            <PostGenerator />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div>
+                <h2 className="text-2xl font-bold mb-4">Generate New Post</h2>
+                <PostGenerator />
+              </div>
+              <div>
+                <PostFeed />
+              </div>
+            </div>
           </div>
         </DashboardLayout>
       </SignedIn>

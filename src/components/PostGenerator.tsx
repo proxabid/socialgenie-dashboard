@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { updateStats } from "@/services/stats";
 import { generatePosts } from "@/services/openai";
+import { savePost } from "@/services/posts";
 
 export function PostGenerator() {
   const [prompt, setPrompt] = useState("");
@@ -13,14 +14,14 @@ export function PostGenerator() {
   const handleGenerate = async () => {
     setLoading(true);
     try {
-      // Generate posts using the imported function
       const posts = await generatePosts(prompt);
-      const response = posts[0]; // Use the first generated post
+      const response = posts[0];
       setGeneratedContent(response);
       
-      // After successful generation, update stats
+      // Save the post and update stats
       const wordCount = response.split(' ').length;
       updateStats(wordCount);
+      savePost({ content: response, prompt, timestamp: new Date().toISOString() });
       
       toast.success("Post generated successfully!");
     } catch (error) {
