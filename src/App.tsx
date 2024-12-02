@@ -25,9 +25,9 @@ const SessionSync = ({ children }: { children: React.ReactNode }) => {
         if (userId) {
           console.log("Starting session sync for user:", userId);
           
-          // Get JWT token from Clerk with the 'supabase' template
+          // Get JWT token from Clerk
           const token = await getToken({
-            template: "supabase"
+            template: "supabase",
           });
           
           if (!token) {
@@ -37,23 +37,29 @@ const SessionSync = ({ children }: { children: React.ReactNode }) => {
 
           console.log("Received token from Clerk");
           
-          // Set the new session with the token
-          const { data, error } = await supabase.auth.setSession({
-            access_token: token,
-            refresh_token: token,
-          });
+          // Create a new session with the token
+          const { data: { session }, error: sessionError } = await supabase.auth.getSession();
           
-          if (error) {
-            console.error("Failed to set Supabase session:", error);
-            console.error("Error details:", error.message);
+          if (sessionError) {
+            console.error("Failed to get Supabase session:", sessionError);
             return;
           }
-          
-          console.log("Successfully set Supabase session:", !!data.session);
-          
-          // Verify the session
-          const { data: { user } } = await supabase.auth.getUser();
-          console.log("Verified Supabase user:", !!user);
+
+          if (!session) {
+            // Only set session if we don't already have one
+            const { data, error } = await supabase.auth.setSession({
+              access_token: token,
+              refresh_token: token,
+            });
+            
+            if (error) {
+              console.error("Failed to set Supabase session:", error);
+              console.error("Error details:", error.message);
+              return;
+            }
+            
+            console.log("Successfully set Supabase session:", !!data.session);
+          }
           
         } else {
           console.log("No Clerk user ID, signing out from Supabase");
